@@ -3,6 +3,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
 
 import 'login.dart';
+import 'terms_of_service.dart';
 
 class SignupForm extends StatefulWidget {
   @override
@@ -158,17 +159,27 @@ class _SignupFormState extends State<SignupForm> {
                     SizedBox(
                       height: 100,
                     ),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 10,
-                      ),
-                      width: MediaQuery.of(context).size.width / 1.3,
-                      child: Text(
-                        "By processing you also agree to the Terms of Service and Privacy Policy",
-                        style: TextStyle(
-                          color: Colors.black45,
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TermsOfService(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10,
                         ),
-                        textAlign: TextAlign.center,
+                        width: MediaQuery.of(context).size.width / 1.3,
+                        child: Text(
+                          "By processing you also agree to the Privacy Policy",
+                          style: TextStyle(
+                            color: Colors.black45,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
                     SizedBox(

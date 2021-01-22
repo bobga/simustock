@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
 import 'signup.dart';
+import 'accounts.dart';
+import 'terms_of_service.dart';
 
 class LoginForm extends StatefulWidget {
   @override
@@ -161,7 +163,14 @@ class _LoginFormState extends State<LoginForm> {
                         onPressed: () {
                           check().then((internet) async {
                             if (internet == false) {
-                            } else {}
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Accounts(),
+                                ),
+                              );
+                            }
                           });
                         },
                       ),
@@ -212,17 +221,27 @@ class _LoginFormState extends State<LoginForm> {
                     SizedBox(
                       height: 30,
                     ),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 10,
-                      ),
-                      width: MediaQuery.of(context).size.width / 1.3,
-                      child: Text(
-                        "By processing you also agree to the Terms of Service and Privacy Policy",
-                        style: TextStyle(
-                          color: Colors.black45,
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TermsOfService(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10,
                         ),
-                        textAlign: TextAlign.center,
+                        width: MediaQuery.of(context).size.width / 1.3,
+                        child: Text(
+                          "By processing you also agree to the Privacy Policy",
+                          style: TextStyle(
+                            color: Colors.black45,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
                     SizedBox(
