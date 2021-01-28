@@ -4,6 +4,7 @@ import 'package:wc_form_validators/wc_form_validators.dart';
 import 'signup.dart';
 import 'accounts.dart';
 import 'terms_of_service.dart';
+import '../blocs/login_bloc.dart';
 
 class LoginForm extends StatefulWidget {
   @override
@@ -28,6 +29,22 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    check().then((internet) {
+      if (internet == false) {
+      } else {
+        bloc.getUser.listen((data) {
+          if (data.user.email != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Accounts(),
+              ),
+            );
+          }
+        });
+      }
+    });
+
     return Form(
       key: _formKey,
       child: loginForm(context),
@@ -164,6 +181,17 @@ class _LoginFormState extends State<LoginForm> {
                           check().then((internet) async {
                             if (internet == false) {
                             } else {
+                              if (_formKey.currentState.validate() == true) {
+                                setState(() {
+                                  load = true;
+                                });
+                                // await bloc.loginUserLogin(
+                                //     usernameController.text,
+                                //     passwordController.text);
+                                setState(() {
+                                  load = false;
+                                });
+                              }
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

@@ -1,8 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+
+import '../models/account_model.dart';
 import 'account_detail_widget.dart';
 
 class StockListWidget extends StatefulWidget {
+  final int accountId;
+  final String symbol;
+  final String firstName;
+  final String lastName;
+  final String currentAccountValue;
+  final String ratio;
+  final List<HistoricalAccountValue> values;
+
+  const StockListWidget({
+    Key key,
+    this.accountId,
+    this.symbol,
+    this.firstName,
+    this.lastName,
+    this.currentAccountValue,
+    this.ratio,
+    this.values,
+  }) : super(key: key);
   @override
   _StockListWidgetState createState() => _StockListWidgetState();
 }
@@ -12,11 +32,12 @@ class _StockListWidgetState extends State<StockListWidget> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        print("Account details");
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => AccountDetailWidget(),
+            builder: (context) => AccountDetailWidget(
+              accountId: widget.accountId,
+            ),
           ),
         );
       },
@@ -48,7 +69,7 @@ class _StockListWidgetState extends State<StockListWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "DJI",
+                          "${widget.symbol}",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 17,
@@ -58,7 +79,7 @@ class _StockListWidgetState extends State<StockListWidget> {
                           height: 5,
                         ),
                         Text(
-                          "Doe Jones",
+                          "${widget.firstName} ${widget.lastName}",
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.5),
                             fontSize: 17,
@@ -71,7 +92,7 @@ class _StockListWidgetState extends State<StockListWidget> {
                     height: 50,
                     width: MediaQuery.of(context).size.width / 3.3,
                     child: charts.TimeSeriesChart(
-                      _createSampleData(),
+                      _createSampleData(widget.values),
                       primaryMeasureAxis: new charts.NumericAxisSpec(
                           renderSpec: new charts.NoneRenderSpec()),
                       domainAxis: new charts.DateTimeAxisSpec(
@@ -79,11 +100,11 @@ class _StockListWidgetState extends State<StockListWidget> {
                     ),
                   ),
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "\$24,334.00",
+                        "\$ ${widget.currentAccountValue}",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 17,
@@ -96,7 +117,7 @@ class _StockListWidgetState extends State<StockListWidget> {
                         padding: EdgeInsets.fromLTRB(15, 1, 15, 1),
                         decoration: BoxDecoration(color: Color(0xff64dd17)),
                         child: Text(
-                          "+1.11",
+                          "+ ${double.parse(widget.ratio).toStringAsFixed(2).toString()}",
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 17,
@@ -114,14 +135,52 @@ class _StockListWidgetState extends State<StockListWidget> {
     );
   }
 
-  static List<charts.Series<TimeSeriesSales, DateTime>> _createSampleData() {
-    final data = [
-      new TimeSeriesSales(new DateTime(2017, 9, 19), 5),
-      new TimeSeriesSales(new DateTime(2017, 9, 26), 25),
-      new TimeSeriesSales(new DateTime(2017, 10, 3), 100),
-      new TimeSeriesSales(new DateTime(2017, 10, 10), 75),
-    ];
+  static List<charts.Series<TimeSeriesSales, DateTime>> _createSampleData(
+      List<HistoricalAccountValue> values) {
+    final List<TimeSeriesSales> data = [];
 
+    for (int i = 0; i < values.length; i++) {
+      data.add(
+        new TimeSeriesSales(
+          new DateTime(
+            DateTime.parse(values[i].validFrom).year,
+            DateTime.parse(values[i].validFrom).month,
+            DateTime.parse(values[i].validFrom).day,
+            DateTime.parse(values[i].validFrom).hour,
+            DateTime.parse(values[i].validFrom).minute,
+            DateTime.parse(values[i].validFrom).second,
+          ),
+          double.parse(values[i].usdAccountValue),
+        ),
+      );
+
+      if (values[i].validTo != "None") {
+        data.add(
+          new TimeSeriesSales(
+            new DateTime(
+              DateTime.parse(values[i].validTo).year,
+              DateTime.parse(values[i].validTo).month,
+              DateTime.parse(values[i].validTo).day,
+              DateTime.parse(values[i].validTo).hour,
+              DateTime.parse(values[i].validTo).minute,
+              DateTime.parse(values[i].validTo).second,
+            ),
+            double.parse(values[i].usdAccountValue),
+          ),
+        );
+      } else {
+        data.add(
+          new TimeSeriesSales(
+            new DateTime(
+              DateTime.now().year,
+              DateTime.now().month,
+              DateTime.now().day,
+            ),
+            double.parse(values[i].usdAccountValue),
+          ),
+        );
+      }
+    }
     return [
       new charts.Series<TimeSeriesSales, DateTime>(
         id: 'usd',
@@ -136,7 +195,7 @@ class _StockListWidgetState extends State<StockListWidget> {
 
 class TimeSeriesSales {
   final DateTime time;
-  final int sales;
+  final double sales;
 
   TimeSeriesSales(this.time, this.sales);
 }

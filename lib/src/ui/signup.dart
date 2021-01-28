@@ -12,6 +12,8 @@ class SignupForm extends StatefulWidget {
 
 class _SignupFormState extends State<SignupForm> {
   final _formKey1 = GlobalKey<FormState>();
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordCheckController = TextEditingController();
@@ -63,7 +65,57 @@ class _SignupFormState extends State<SignupForm> {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: 50.0,
+                      height: 20.0,
+                    ),
+                    new Padding(
+                      padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                      child: TextFormField(
+                        controller: firstNameController,
+                        maxLines: 1,
+                        autofocus: false,
+                        validator: Validators.compose([
+                          Validators.required('First Name is required'),
+                        ]),
+                        decoration: InputDecoration(
+                          hintText: 'First Name*',
+                          filled: true,
+                          fillColor: Colors.white,
+                          contentPadding:
+                              EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    new Padding(
+                      padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                      child: TextFormField(
+                        controller: lastNameController,
+                        maxLines: 1,
+                        autofocus: false,
+                        validator: Validators.compose([
+                          Validators.required('Last Name is required'),
+                        ]),
+                        decoration: InputDecoration(
+                          hintText: 'Last Name*',
+                          filled: true,
+                          fillColor: Colors.white,
+                          contentPadding:
+                              EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15.0,
                     ),
                     new Padding(
                       padding: EdgeInsets.only(left: 10.0, right: 10.0),

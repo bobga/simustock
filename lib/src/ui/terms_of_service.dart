@@ -7,8 +7,7 @@ class TermsOfService extends StatelessWidget {
     final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor:
-          Theme.of(context).scaffoldBackgroundColor.withOpacity(0.8),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
           'Privacy Policy',
@@ -948,71 +947,71 @@ class TermsOfService extends StatelessWidget {
               ),
             ],
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            child: Container(
-              height: 100,
-              width: screenSize.width,
-              decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 15, 20, 0),
-                    child: Text(
-                      "By processing you also agree to the Privacy Policy",
-                      style: TextStyle(
-                        color: Colors.black45,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  InkWell(
-                    borderRadius: new BorderRadius.circular(15.0),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SignupForm(),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      height: kToolbarHeight / 1.20,
-                      width: MediaQuery.of(context).size.width / 1.3,
-                      child: new Align(
-                        alignment: Alignment.center,
-                        child: new RichText(
-                          text: new TextSpan(
-                              style: new TextStyle(
-                                fontSize: 13.0,
-                                color: Color.fromRGBO(61, 131, 225, 1),
-                              ),
-                              children: <TextSpan>[
-                                new TextSpan(
-                                  text: 'Don`t have an account? ',
-                                  style: TextStyle(
-                                    color: Colors.black45,
-                                  ),
-                                ),
-                                new TextSpan(
-                                  text: ' Sign Up',
-                                  style: new TextStyle(
-                                    color: Color.fromRGBO(0, 0, 0, 1),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ]),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // Positioned(
+          //   bottom: 0,
+          //   left: 0,
+          //   child: Container(
+          //     height: 100,
+          //     width: screenSize.width,
+          //     decoration: BoxDecoration(
+          //       color: Theme.of(context).scaffoldBackgroundColor,
+          //     ),
+          //     child: Column(
+          //       children: [
+          //         Padding(
+          //           padding: const EdgeInsets.fromLTRB(20, 15, 20, 0),
+          //           child: Text(
+          //             "By processing you also agree to the Privacy Policy",
+          //             style: TextStyle(
+          //               color: Colors.black45,
+          //             ),
+          //             textAlign: TextAlign.center,
+          //           ),
+          //         ),
+          //         InkWell(
+          //           borderRadius: new BorderRadius.circular(15.0),
+          //           onTap: () {
+          //             Navigator.push(
+          //               context,
+          //               MaterialPageRoute(
+          //                 builder: (context) => SignupForm(),
+          //               ),
+          //             );
+          //           },
+          //           child: Container(
+          //             height: kToolbarHeight / 1.20,
+          //             width: MediaQuery.of(context).size.width / 1.3,
+          //             child: new Align(
+          //               alignment: Alignment.center,
+          //               child: new RichText(
+          //                 text: new TextSpan(
+          //                     style: new TextStyle(
+          //                       fontSize: 13.0,
+          //                       color: Color.fromRGBO(61, 131, 225, 1),
+          //                     ),
+          //                     children: <TextSpan>[
+          //                       new TextSpan(
+          //                         text: 'Don`t have an account? ',
+          //                         style: TextStyle(
+          //                           color: Colors.black45,
+          //                         ),
+          //                       ),
+          //                       new TextSpan(
+          //                         text: ' Sign Up',
+          //                         style: new TextStyle(
+          //                           color: Color.fromRGBO(0, 0, 0, 1),
+          //                           fontWeight: FontWeight.bold,
+          //                         ),
+          //                       ),
+          //                     ]),
+          //               ),
+          //             ),
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

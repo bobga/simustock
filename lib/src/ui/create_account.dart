@@ -1,6 +1,9 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
+
+import '../blocs/account_bloc.dart';
 
 class CreateAccountForm extends StatefulWidget {
   @override
@@ -12,6 +15,35 @@ class _CreateAccountFormState extends State<CreateAccountForm> {
   TextEditingController stockController = TextEditingController();
   TextEditingController amountController = TextEditingController();
   TextEditingController numberOfSharesController = TextEditingController();
+
+  List<String> stockList = [];
+
+  Future<bool> check() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      return true;
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      return true;
+    }
+    return false;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    check().then((internet) {
+      if (internet == false) {
+      } else {
+        bloc.fetchAllStock();
+        bloc.allStock.listen((snapshot) {
+          for (int i = 0; i < snapshot.datas.length; i++) {
+            stockList.add(snapshot.datas[i].symbol);
+          }
+        });
+      }
+    });
+  }
+
   bool load = false;
   @override
   Widget build(BuildContext context) {
@@ -79,11 +111,12 @@ class _CreateAccountFormState extends State<CreateAccountForm> {
                               borderRadius: BorderRadius.circular(5.0),
                             ),
                           ),
-                          items: ['TSLA'],
+                          items: stockList,
                           autoValidateMode: AutovalidateMode.onUserInteraction,
-                          validator: Validators.compose([
-                            Validators.required('This field is required'),
-                          ]),
+                          validator: (value) {
+                            if (value == null) return "This field is required";
+                            return null;
+                          },
                           // onFind: ,
                           onChanged: (String data) {
                             setState(() {
@@ -259,7 +292,22 @@ class _CreateAccountFormState extends State<CreateAccountForm> {
                       valueColor:
                           new AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
-              onPressed: () {},
+              onPressed: () {
+                check().then((internet) async {
+                  if (internet == false) {
+                  } else {
+                    if (_formKey5.currentState.validate() == true) {
+                      setState(() {
+                        load = true;
+                      });
+                      // await bloc.loginUserLogin(
+                      //     usernameController.text,
+                      //     passwordController.text);
+
+                    }
+                  }
+                });
+              },
             ),
           ),
         ),
