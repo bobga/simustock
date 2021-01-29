@@ -45,8 +45,8 @@ class AccountBloc {
 
   saveAccount(
       double shareAmount, String symbol, double usdAmount, int userId) async {
-    AccountModel accountModel =
+    bool result =
         await repository.saveAccount(shareAmount, symbol, usdAmount, userId);
-    accountFetcher.sink.add(accountModel);
+    return result;
   }
 }

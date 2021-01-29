@@ -17,7 +17,10 @@ class Repository {
 
   Future<StockModel> fetchAllStock() => simuStockApiProvider.fetchAllStock();
 
-  Future<AccountModel> saveAccount(
+  Future<bool> saveAccount(
           double shareAmount, String symbol, double usdAmount, int userId) =>
       simuStockApiProvider.saveAccount(shareAmount, symbol, usdAmount, userId);
+
+  Future<UserModel> userSignup(dynamic params) =>
+      simuStockApiProvider.signUpUser(params);
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
 
 import '../blocs/account_bloc.dart';
+import 'accounts.dart';
 
 class CreateAccountForm extends StatefulWidget {
   @override
@@ -300,10 +301,51 @@ class _CreateAccountFormState extends State<CreateAccountForm> {
                       setState(() {
                         load = true;
                       });
-                      // await bloc.loginUserLogin(
-                      //     usernameController.text,
-                      //     passwordController.text);
 
+                      bloc
+                          .saveAccount(
+                        double.parse(numberOfSharesController.text),
+                        stockController.text,
+                        double.parse(amountController.text),
+                        11,
+                      )
+                          .then((value) {
+                        if (value == true) {
+                          setState(() {
+                            load = false;
+                          });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Accounts(),
+                            ),
+                          );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: new Text("You were something wrong!"),
+                                content: new Text("Check them once more!"),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                actions: <Widget>[
+                                  new FlatButton(
+                                    child: new Text("Ok"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          setState(() {
+                            load = false;
+                          });
+                        }
+                      });
                     }
                   }
                 });

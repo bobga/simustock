@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:wc_form_validators/wc_form_validators.dart';
+import 'package:string_validator/string_validator.dart';
 
 import 'login.dart';
 import 'terms_of_service.dart';
+
+import '../blocs/signup_bloc.dart';
 
 class SignupForm extends StatefulWidget {
   @override
@@ -188,13 +191,16 @@ class _SignupFormState extends State<SignupForm> {
                         maxLines: 1,
                         autofocus: false,
                         obscureText: true,
-                        validator: Validators.compose([
-                          Validators.required('Password is required'),
-                          Validators.minLength(
-                              8, 'Password cannot be less than 8 characters'),
-                          Validators.maxLength(120,
-                              'Password cannot be greater than 120 characters'),
-                        ]),
+                        validator: (String value) {
+                          if (isNull(value)) {
+                            return "Confirm password is required";
+                          } else if (!isLength(value, 8, 20)) {
+                            return "Confirm password must be min 8, max 20";
+                          } else if (!equals(value, passwordController.text)) {
+                            return "Password does not match";
+                          } else
+                            return null;
+                        },
                         decoration: InputDecoration(
                           hintText: 'Repeat Password*',
                           filled: true,
@@ -258,7 +264,21 @@ class _SignupFormState extends State<SignupForm> {
                         onPressed: () {
                           check().then((internet) async {
                             if (internet == false) {
-                            } else {}
+                            } else {
+                              if (_formKey1.currentState.validate() == true) {
+                                setState(() {
+                                  load = true;
+                                });
+                                var params = {
+                                  "email": emailController.text,
+                                  "password": passwordController.text,
+                                };
+                                await bloc.userSignup(params);
+                                setState(() {
+                                  load = false;
+                                });
+                              }
+                            }
                           });
                         },
                       ),
