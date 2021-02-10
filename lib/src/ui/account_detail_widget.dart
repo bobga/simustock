@@ -136,7 +136,7 @@ class _AccountDetailWidgetState extends State<AccountDetailWidget> {
                                 ),
                               ),
                               Text(
-                                '${double.parse(snapshot.data.datas[0].currentUsdAccountValue).toStringAsFixed(3)}',
+                                '${double.parse(snapshot.data.datas[0].currentUsdAccountValue ?? "0.0").toStringAsFixed(3)}',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 25,

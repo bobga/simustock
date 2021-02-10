@@ -21,7 +21,7 @@ class LoginBloc {
       } catch (e) {
         print("Error == ${e.toString()}");
         if (!userFetcher.isClosed) {
-          // userFetcher.sink.addError(e.toString());
+          userFetcher.sink.addError(e.toString());
         }
       }
     }

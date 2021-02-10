@@ -185,19 +185,20 @@ class _LoginFormState extends State<LoginForm> {
                                 setState(() {
                                   load = true;
                                 });
-                                // await bloc.loginUserLogin(
-                                //     usernameController.text,
-                                //     passwordController.text);
+                                await bloc.loginUserLogin(
+                                    usernameController.text,
+                                    passwordController.text);
+
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => Accounts(),
+                                //   ),
+                                // );
                                 setState(() {
                                   load = false;
                                 });
                               }
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Accounts(),
-                                ),
-                              );
                             }
                           });
                         },

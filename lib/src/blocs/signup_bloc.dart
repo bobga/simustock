@@ -3,26 +3,43 @@ import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 
 import '../resources/repository.dart';
-import '../models/user_model.dart';
+import '../models/country_model.dart';
+import '../models/state_model.dart';
 
 final bloc = SignupBloc();
 
 class SignupBloc {
   final repository = Repository();
-  final userFetcher = PublishSubject<UserModel>();
 
-  StreamView<UserModel> get getUser => userFetcher.stream;
+  final countryFetcher = PublishSubject<CountryModel>();
+  final stateFetcher = PublishSubject<StateModel>();
+
+  StreamView<CountryModel> get getAllCountry => countryFetcher.stream;
+  StreamView<StateModel> get getAllState => stateFetcher.stream;
+
+  dispose() async {
+    await countryFetcher.drain();
+    await stateFetcher.drain();
+    countryFetcher.close();
+    stateFetcher.close();
+  }
 
   userSignup(dynamic params) async {
     try {
-      UserModel userModel = await repository.userSignup(params);
-      userFetcher.sink.add(userModel);
+      String result = await repository.userSignup(params);
+      return result;
     } catch (e) {
-      userFetcher.sink.addError(e);
+      print("Error == ${e.toString()}");
     }
   }
 
-  dispose() {
-    userFetcher.close();
+  fetchAllCountry() async {
+    CountryModel countryModel = await repository.fetchAllCountry();
+    countryFetcher.sink.add(countryModel);
+  }
+
+  fetchAllState() async {
+    StateModel stateModel = await repository.fetchAllState();
+    stateFetcher.sink.add(stateModel);
   }
 }

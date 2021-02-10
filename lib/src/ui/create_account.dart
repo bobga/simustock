@@ -304,11 +304,9 @@ class _CreateAccountFormState extends State<CreateAccountForm> {
 
                       bloc
                           .saveAccount(
-                        double.parse(numberOfSharesController.text),
-                        stockController.text,
-                        double.parse(amountController.text),
-                        11,
-                      )
+                              double.parse(numberOfSharesController.text),
+                              stockController.text,
+                              double.parse(amountController.text))
                           .then((value) {
                         if (value == true) {
                           setState(() {

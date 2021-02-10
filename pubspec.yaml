@@ -36,10 +36,12 @@ dependencies:
   charts_flutter: ^0.9.0
   dropdown_search: ^0.4.8
   oauth2: ^1.6.3
+  flutter_auth0: ^0.5.0
   rxdart: ^0.24.1
   http:
   flutter_secure_storage: ^3.2.1+1
   intl: ^0.16.1
+  jwt_decoder: ^1.0.4
 
 dev_dependencies:
   flutter_test:

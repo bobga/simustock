@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:connectivity/connectivity.dart';
+
 import 'package:wc_form_validators/wc_form_validators.dart';
 import 'package:string_validator/string_validator.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 import 'login.dart';
 import 'terms_of_service.dart';
 
 import '../blocs/signup_bloc.dart';
+import '../models/country_model.dart';
+import '../models/state_model.dart';
 
 class SignupForm extends StatefulWidget {
   @override
@@ -15,12 +19,19 @@ class SignupForm extends StatefulWidget {
 
 class _SignupFormState extends State<SignupForm> {
   final _formKey1 = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordCheckController = TextEditingController();
+  TextEditingController countryController = TextEditingController();
+  TextEditingController stateController = TextEditingController();
   bool load = false;
+
+  List<String> countryList = [];
+  List<String> stateList = [];
 
   Future<bool> check() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -30,6 +41,34 @@ class _SignupFormState extends State<SignupForm> {
       return true;
     }
     return false;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    check().then((internet) {
+      if (internet == false) {
+      } else {
+        bloc.fetchAllState();
+        bloc.fetchAllCountry();
+        bloc.getAllCountry.listen((snapshot) {
+          for (int i = 0; i < snapshot.datas.length; i++) {
+            countryList.add(snapshot.datas[i].countryName);
+          }
+        });
+        bloc.getAllState.listen((snapshot) {
+          for (int i = 0; i < snapshot.datas.length; i++) {
+            stateList.add(snapshot.datas[i].stateName);
+          }
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
   }
 
   @override
@@ -43,6 +82,7 @@ class _SignupFormState extends State<SignupForm> {
   Scaffold signupForm(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffoldKey,
       body: CustomScrollView(
         physics: BouncingScrollPhysics(),
         slivers: <Widget>[
@@ -215,7 +255,114 @@ class _SignupFormState extends State<SignupForm> {
                       ),
                     ),
                     SizedBox(
-                      height: 100,
+                      height: 15,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                      child: StreamBuilder(
+                        stream: bloc.getAllCountry,
+                        builder:
+                            (context, AsyncSnapshot<CountryModel> snapshot) {
+                          if (snapshot.hasData) {
+                            return DropdownSearch<String>(
+                              mode: Mode.BOTTOM_SHEET,
+                              isFilteredOnline: true,
+                              showClearButton: false,
+                              showSearchBox: true,
+                              hint: "Country*",
+                              dropdownSearchDecoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                labelStyle: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(15.0, 0.0, 5.0, 0.0),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                              ),
+                              items: countryList,
+                              autoValidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (value) {
+                                if (value == null)
+                                  return "This field is required";
+                                return null;
+                              },
+                              // onFind: ,
+                              onChanged: (String data) {
+                                setState(() {
+                                  countryController.text = data;
+                                });
+                                print(data);
+                              },
+                            );
+                          }
+
+                          return CircularProgressIndicator(
+                            strokeWidth: 2.0,
+                            valueColor:
+                                new AlwaysStoppedAnimation<Color>(Colors.white),
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                      child: StreamBuilder(
+                          stream: bloc.getAllState,
+                          builder:
+                              (context, AsyncSnapshot<StateModel> snapshot) {
+                            if (snapshot.hasData) {
+                              return DropdownSearch<String>(
+                                mode: Mode.BOTTOM_SHEET,
+                                isFilteredOnline: true,
+                                showClearButton: false,
+                                showSearchBox: true,
+                                hint: "State*",
+                                dropdownSearchDecoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  labelStyle: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  contentPadding:
+                                      EdgeInsets.fromLTRB(15.0, 0.0, 5.0, 0.0),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                ),
+                                items: stateList,
+                                autoValidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                validator: (value) {
+                                  if (value == null)
+                                    return "This field is required";
+                                  return null;
+                                },
+                                onChanged: (String data) {
+                                  setState(() {
+                                    stateController.text = data;
+                                  });
+                                  print(data);
+                                },
+                              );
+                            }
+                            return CircularProgressIndicator(
+                              strokeWidth: 2.0,
+                              valueColor: new AlwaysStoppedAnimation<Color>(
+                                  Colors.white),
+                            );
+                          }),
+                    ),
+                    SizedBox(
+                      height: 30,
                     ),
                     InkWell(
                       onTap: () {
@@ -270,12 +417,23 @@ class _SignupFormState extends State<SignupForm> {
                                   load = true;
                                 });
                                 var params = {
+                                  "first_name": firstNameController.text,
+                                  "last_name": lastNameController.text,
                                   "email": emailController.text,
                                   "password": passwordController.text,
+                                  "country": countryController.text,
+                                  "state": stateController.text,
                                 };
-                                await bloc.userSignup(params);
-                                setState(() {
-                                  load = false;
+                                await bloc.userSignup(params).then((result) {
+                                  setState(() {
+                                    load = false;
+                                  });
+                                  _scaffoldKey.currentState.showSnackBar(
+                                    SnackBar(
+                                      content: Text("$result"),
+                                      duration: Duration(seconds: 3),
+                                    ),
+                                  );
                                 });
                               }
                             }

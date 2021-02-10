@@ -248,11 +248,13 @@ class _AccountsState extends State<Accounts> {
                       symbol: snapshot.data.data[index].symbol,
                       firstName: snapshot.data.data[index].firstName,
                       lastName: snapshot.data.data[index].lastName,
-                      currentAccountValue: double.parse(
-                              snapshot.data.data[index].currentUsdAccountValue)
+                      currentAccountValue: double.parse(snapshot
+                                  .data.data[index].currentUsdAccountValue ??
+                              "0.0")
                           .toStringAsFixed(4),
-                      ratio: (double.parse(snapshot
-                                  .data.data[index].currentUsdAccountValue) /
+                      ratio: (double.parse(snapshot.data.data[index]
+                                      .currentUsdAccountValue ??
+                                  "0.0") /
                               double.parse(snapshot.data.data[index].usdAmount))
                           .toString(),
                       values: snapshot.data.data[index].values,
@@ -266,11 +268,13 @@ class _AccountsState extends State<Accounts> {
                             symbol: snapshot.data.data[index].symbol,
                             firstName: snapshot.data.data[index].firstName,
                             lastName: snapshot.data.data[index].lastName,
-                            currentAccountValue: double.parse(snapshot
-                                    .data.data[index].currentUsdAccountValue)
+                            currentAccountValue: double.parse(snapshot.data
+                                        .data[index].currentUsdAccountValue ??
+                                    "0.0")
                                 .toStringAsFixed(4),
                             ratio: (double.parse(snapshot.data.data[index]
-                                        .currentUsdAccountValue) /
+                                            .currentUsdAccountValue ??
+                                        "0.0") /
                                     double.parse(
                                         snapshot.data.data[index].usdAmount))
                                 .toString(),
